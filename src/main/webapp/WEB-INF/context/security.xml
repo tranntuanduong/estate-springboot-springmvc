@@ -9,7 +9,7 @@
             
     <http auto-config="false" use-expressions="true" disable-url-rewriting="true">
     
-    	<!-- <intercept-url pattern="/quan-tri/trang-chu" access="hasAnyRole('MANAGER')" /> -->
+    	<intercept-url pattern="/quan-tri/trang-chu" access="hasAnyRole('MANAGER','STAFF')" />
     	
     	<access-denied-handler error-page="/accessDenied" />
         <form-login  login-page="/dang-nhap"

@@ -38,15 +38,15 @@
             <a href="#" class="dropdown-toggle">
                 <i class="menu-icon fa fa-list"></i>
                 <span class="menu-text"></span>
-                Quản lý bài viết
+                Quản lý tòa nhà
                 <b class="arrow fa fa-angle-down"></b>
             </a>
             <b class="arrow"></b>
             <ul class="submenu">
                 <li>
-                    <a href="<c:url value='#'/>">
+                    <a href="<c:url value="/admin/building?page=1&maxPageItem=3&sortName=name&sortBy=ASC"/>">
                         <i class="menu-icon fa fa-caret-right"></i>
-                        DS Toa nha
+                       	DS tòa nhà
                     </a>
                     <b class="arrow"></b>
                 </li>

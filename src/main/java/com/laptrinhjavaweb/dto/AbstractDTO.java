@@ -7,21 +7,20 @@ import java.util.List;
 public class AbstractDTO<T> {
 	
 	private Long id;
-	private Timestamp createdDate;
+	private Timestamp createdDate; 
 	private Timestamp modifiedDate;
-	private String createdBy;
+	private String createdBy; 
 	private String modifiedBy;
-	private long[] ids;
-	private List<T> listResult = new ArrayList<>();
-	private Integer page;
-	private Integer maxPageItem;
-	private Integer totalPage;
-	private Integer totalItem;
+	private int maxPageItem ;
+	private int page;
+	private String action;
+	private List<T> listResult = new ArrayList<T>();
+	private Long[] ids;
+	private int totalPage;
+	private int totalItems;
 	private String sortName;
 	private String sortBy;
-	private String alert;
-	private String message;
-	private String type;
+	
 	
 	public Long getId() {
 		return id;
@@ -53,11 +52,23 @@ public class AbstractDTO<T> {
 	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
-	public long[] getIds() {
-		return ids;
+	public int getMaxPageItem() {
+		return maxPageItem;
 	}
-	public void setIds(long[] ids) {
-		this.ids = ids;
+	public void setMaxPageItem(int maxPageItem) {
+		this.maxPageItem = maxPageItem;
+	}
+	public int getPage() {
+		return page;
+	}
+	public void setPage(int page) {
+		this.page = page;
+	}
+	public String getAction() {
+		return action;
+	}
+	public void setAction(String action) {
+		this.action = action;
 	}
 	public List<T> getListResult() {
 		return listResult;
@@ -65,29 +76,25 @@ public class AbstractDTO<T> {
 	public void setListResult(List<T> listResult) {
 		this.listResult = listResult;
 	}
-	public Integer getPage() {
-		return page;
+	public Long[] getIds() {
+		return ids;
 	}
-	public void setPage(Integer page) {
-		this.page = page;
+	public void setIds(Long[] ids) {
+		this.ids = ids;
 	}
-	public Integer getMaxPageItem() {
-		return maxPageItem;
-	}
-	public void setMaxPageItem(Integer maxPageItem) {
-		this.maxPageItem = maxPageItem;
-	}
-	public Integer getTotalPage() {
+
+	public int getTotalPage() {
 		return totalPage;
 	}
-	public void setTotalPage(Integer totalPage) {
+	public void setTotalPage(int totalPage) {
 		this.totalPage = totalPage;
 	}
-	public Integer getTotalItem() {
-		return totalItem;
+	
+	public int getTotalItems() {
+		return totalItems;
 	}
-	public void setTotalItem(Integer totalItem) {
-		this.totalItem = totalItem;
+	public void setTotalItems(int totalItems) {
+		this.totalItems = totalItems;
 	}
 	public String getSortName() {
 		return sortName;
@@ -100,29 +107,6 @@ public class AbstractDTO<T> {
 	}
 	public void setSortBy(String sortBy) {
 		this.sortBy = sortBy;
-	}
-
-	public String getAlert() {
-		return alert;
-	}
-
-	public void setAlert(String alert) {
-		this.alert = alert;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
+	}	
+	
 }
