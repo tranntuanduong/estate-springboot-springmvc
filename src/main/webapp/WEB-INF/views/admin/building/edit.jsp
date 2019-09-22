@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@include file="/common/taglib.jsp"%>
-<c:url var="builddingAPI" value="/api-admin-building"/>
-<c:url var = "buildingURL" value = "/admin-building"/>
+	<%@include file="/common/taglib.jsp"%>
+<c:url var="addOrUpdateBuildingURL" value="/api/building"/>
+<c:url var = "buildingURL" value = "/admin/building"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,7 +30,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="text" class="form-control input-sm" name="name" value="${model.name}"/>
+										<input type="text" class="form-control input-sm" name="name" value="${building.name}"/>
 									</div>
 								</div>
 							</div>
@@ -75,7 +75,7 @@
 										<select class="form-control" name="district" >
 											<option value="" selected>Chọn quận</option>
 											<c:forEach var="item" items="${districts}">
-												<option value="${item.key}" ${(item.key==model.district)?'selected':''}>${item.value}</option>
+												<option value="${item.key}" ${(item.key==building.district)?'selected':''}>${item.value}</option>
 											</c:forEach>		
 										</select>
 									</div>
@@ -87,7 +87,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="text" class="form-control input-sm" name="ward" value="${model.ward}"/>
+										<input type="text" class="form-control input-sm" name="ward" value="${building.ward}"/>
 									</div>
 								</div>
 							</div>
@@ -97,7 +97,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="text" class="form-control input-sm" name="street" value="${model.street}"/>
+										<input type="text" class="form-control input-sm" name="street" value="${building.street}"/>
 									</div>
 								</div>
 							</div>
@@ -107,7 +107,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="text" class="form-control input-sm" name="structure" value="${model.structure}"/>
+										<input type="text" class="form-control input-sm" name="structure" value="${building.structure}"/>
 									</div>
 								</div>
 							</div>
@@ -117,7 +117,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="number" class="form-control input-sm" name="numberOfBasement" value="${model.numberOfBasement}"/>
+										<input type="number" class="form-control input-sm" name="numberOfBasement" value="${building.numberOfBasement}"/>
 									</div>
 								</div>
 							</div>
@@ -127,7 +127,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="number" class="form-control input-sm" name="buildingArea" value="${model.buildingArea}" id="buildingArea"/>
+										<input type="number" class="form-control input-sm" name="buildingArea" value="${building.buildingArea}" id="buildingArea"/>
 									</div>
 								</div>
 							</div>
@@ -137,7 +137,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="text" class="form-control input-sm" name="direction" value="${model.direction}"/>
+										<input type="text" class="form-control input-sm" name="direction" value="${building.direction}"/>
 									</div>
 								</div>
 							</div>
@@ -157,7 +157,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="text" class="form-control input-sm" name="rentArea" value="${model.rentArea}"/>
+										<input type="text" class="form-control input-sm" name="rentArea" value="${building.rentArea}"/>
 									</div>
 								</div>
 							</div>
@@ -178,7 +178,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="number" class="form-control input-sm" name="costRent" value="${model.costRent}"/>
+										<input type="number" class="form-control input-sm" name="costRent" value="${building.costRent}"/>
 									</div>
 								</div>
 							</div>
@@ -188,7 +188,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="text" class="form-control input-sm" name="costDescription" value="${model.costDescription}"/>
+										<input type="text" class="form-control input-sm" name="costDescription" value="${building.costDescription}"/>
 									</div>
 								</div>
 							</div>
@@ -198,7 +198,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="text" class="form-control input-sm" name="carCost" value="${model.carCost}"/>
+										<input type="text" class="form-control input-sm" name="carCost" value="${building.carCost}"/>
 									</div>
 								</div>
 							</div>
@@ -208,7 +208,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="text" class="form-control input-sm" name="motorbikeCost" value="${model.motorbikeCost}"/>
+										<input type="text" class="form-control input-sm" name="motorbikeCost" value="${building.motorbikeCost}"/>
 									</div>
 								</div>
 							</div>
@@ -218,7 +218,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="text" class="form-control input-sm"  name="overtimeCost" value="${model.overtimeCost}"/>
+										<input type="text" class="form-control input-sm"  name="overtimeCost" value="${building.overtimeCost}"/>
 									</div>
 								</div>
 							</div>
@@ -228,7 +228,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="text" class="form-control input-sm"  name="electricityCost" value="${model.electricityCost}"/>
+										<input type="text" class="form-control input-sm"  name="electricityCost" value="${building.electricityCost}"/>
 									</div>
 								</div>
 							</div>
@@ -238,7 +238,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="text" class="form-control input-sm"  name="deposit" value="${model.deposit}"/>
+										<input type="text" class="form-control input-sm"  name="deposit" value="${building.deposit}"/>
 									</div>
 								</div>
 							</div>
@@ -248,7 +248,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="text" class="form-control input-sm"  name="payment" value="${model.payment}"/>
+										<input type="text" class="form-control input-sm"  name="payment" value="${building.payment}"/>
 									</div>
 								</div>
 							</div>
@@ -258,7 +258,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="text" class="form-control input-sm"  name="timeContract" value="${model.timeContract}"/>
+										<input type="text" class="form-control input-sm"  name="timeContract" value="${building.timeContract}"/>
 									</div>
 								</div>
 							</div>
@@ -268,7 +268,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="text" class="form-control input-sm"  name="timeDecorator" value="${model.timeDecorator}"/>
+										<input type="text" class="form-control input-sm"  name="timeDecorator" value="${building.timeDecorator}"/>
 									</div>
 								</div>
 							</div>
@@ -278,7 +278,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="text" class="form-control input-sm"  name="managerName" value="${model.managerName}"/>
+										<input type="text" class="form-control input-sm"  name="managerName" value="${building.managerName}"/>
 									</div>
 								</div>
 							</div>
@@ -288,7 +288,7 @@
 								</div>
 								<div class="col-sm-9">
 									<div class="fg-line">
-										<input type="text" class="form-control input-sm"  name="managerPhone" value="${model.managerPhone}"/>
+										<input type="text" class="form-control input-sm"  name="managerPhone" value="${building.managerPhone}"/>
 									</div>
 								</div>
 							</div>
@@ -302,22 +302,22 @@
 											<div class="checkbox">
 												<c:forEach var="item" items="${buildingtypes}">
 													<label>
-														<input type="checkbox" value="${item.key}" name="buildingTypes" ${fn:contains(model.type,item.key) ? 'checked':'' }><b>${item.value}</b>
+														<input type="checkbox" value="${item.key}" name="buildingTypes" ${fn:contains(building.type,item.key) ? 'checked':'' }><b>${item.value}</b>
 													</label>
 												</c:forEach>
 											</div>		
 									</div>
 								</div>
 							</div>		
-							<input type="hidden" name="id" value="${model.id}" id="buildingId"/>
+							<input type="hidden" name="id" value="${building.id}" id="buildingId"/>
 							</form>
 							<div class="form-group">
-								<c:if test="${empty model.id}">
+								<c:if test="${empty building.id}">
 									<div class = "col-sm-1 col-sm-offset-3">
 										<button class = "btn btn-success" id="btnAddOrUpdateBuilding">Thêm sản phẩm</button>
 									</div>
 								</c:if>
-								<c:if test="${not empty model.id}">
+								<c:if test="${not empty building.id}">
 									<div class = "col-sm-1 col-sm-offset-3">
 										<button class = "btn btn-success" id="btnAddOrUpdateBuilding">Cập nhật sản phẩm</button>
 									</div>
@@ -362,32 +362,34 @@
 	function addBuilding(data,id) {
 		$.ajax({
 			//url: '${builddingAPI}',
-			url : 'http://localhost:8087/api/building',
+			url : 'api/building',
 			data: JSON.stringify(data),
 			type: 'POST',	
 			contentType: 'application/json',
 			dataType: 'json',
 	
 			success: function(data) {
-				window.location.href = "${buildingURL}?action=EDIT&id="+data.id+"&message=insert_success";
+				window.location.href = "${buildingURL}?id="+data.id+"&message=insert_success";
 			},		
 			error: function() {
-				window.location.href = "${buildingURL}?action=LIST&message=insert_success";
+				window.location.href = "${buildingURL}?page=1&maxPageItem=3&sortName=name&sortBy=ASC&message=errorsystem";
 			}
 		});
 	}
 	function editBuilding(data, id) {
 		$.ajax({
-			//url: '${builddingAPI}',
-			url : 'http://localhost:8087/api/building',
+			//url : 'http://localhost:8087/api/building',
+			url :  "${addOrUpdateBuildingURL}",
+			//url : '/api/building',
 			data: JSON.stringify(data),
 			type: 'PUT',	
 			contentType: 'application/json',	
+			dataType: 'json',
 			success: function(data) {
-				window.location.href = "${buildingURL}?action=EDIT&id="+id+"&message=update_success";
+				window.location.href = "${buildingURL}?id="+id+"&message=update_success";
 			},		
 			error: function() {
-				window.location.href = "${buildingURL}?action=LIST&message=errorsystem";
+				window.location.href = "${buildingURL}?page=1&maxPageItem=3&sortName=name&sortBy=ASC&message=errorsystem";
 			}
 		});
 	}	

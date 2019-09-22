@@ -46,7 +46,7 @@
                 <li>
                     <a href="<c:url value="/admin/building?page=1&maxPageItem=3&sortName=name&sortBy=ASC"/>">
                         <i class="menu-icon fa fa-caret-right"></i>
-                       	DS tòa nhà
+                       	DS tòa nhàa
                     </a>
                     <b class="arrow"></b>
                 </li>

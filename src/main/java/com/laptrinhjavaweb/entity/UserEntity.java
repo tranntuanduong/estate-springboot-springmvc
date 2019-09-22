@@ -90,18 +90,4 @@ public class UserEntity extends BaseEntity{
 		this.buildings = buildings;
 	}
 
-//	public List<CustomerEntity> getCustomers() {
-//		return customers;
-//	}
-//
-//	public void setCustomers(List<CustomerEntity> customers) {
-//		this.customers = customers;
-//	}
-
-	
-
-	
-
-	
-	
 }

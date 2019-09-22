@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@include file="/common/taglib.jsp"%>
-<c:url var = "buildingURL" value = "/admin-building"/>
+<c:url var = "buildingURL" value = "/admin/building"/>
 <c:url var="builddingAPI" value="/api-admin-building"/>
 <!DOCTYPE html>
 <html>
@@ -203,7 +203,7 @@
 									<a  class="dt-button buttons-colvis btn btn-white btn-primary btn-bold"
 										data-toggle="tooltip"
 										title='Thêm tòa nhà'		
-										href='<c:url value="/admin-building?action=EDIT"/>'> <span><i class="fa fa-plus-circle sbigger-110 purple"></i></span>
+										href='<c:url value="/admin/building/edit"/>'> <span><i class="fa fa-plus-circle sbigger-110 purple"></i></span>
 									</a>
 									<button type="button" id="bntDelete"
 											class="dt-button buttons-html5 btn btn-white btn-primary btn-bold"
@@ -259,7 +259,7 @@
 												     <a class="btn btn-xs btn-primary btn-edit"
 														data-toggle="tooltip"
 														title='Cập nhật tòa nhà'
-														href='<c:url value="/admin-building?action=EDIT&id=${item.id}"/>'> 
+														href='<c:url value="/admin/building/edit?id=${item.id}"/>'> 
 														<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
 													</a>
 												</td>
@@ -286,33 +286,7 @@
 						  </table>
 					</div>
 				</div>
-				<!-- test model -->
-				<!-- Button trigger modal -->
-					<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-					  model bootstrap
-					</button>
-					
-					<!-- Modal -->
-					<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-					  <div class="modal-dialog" role="document">
-					    <div class="modal-content">
-					      <div class="modal-header">
-					        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-					        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					          <span aria-hidden="true">&times;</span>
-					        </button>
-					      </div>
-					      <div class="modal-body">
-					        ...
-					      </div>
-					      <div class="modal-footer">
-					        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-					        <button type="button" class="btn btn-primary">Save changes</button>
-					      </div>
-					    </div>
-					  </div>
-					</div>
-				<!-- test mode; -->
+				
 				<!-- paging -->
 				<div class="container">
 				    <nav aria-label="Page navigation">
@@ -374,6 +348,8 @@
 	 
 	 
 </script>
+
+
 </body>
 </html>
 

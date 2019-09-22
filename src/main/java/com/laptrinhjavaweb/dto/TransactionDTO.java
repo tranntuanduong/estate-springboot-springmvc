@@ -3,8 +3,9 @@ package com.laptrinhjavaweb.dto;
 public class TransactionDTO extends AbstractDTO<TransactionDTO>{
 
 	private Long customerId;
-	private String code;
+	
 	private String node;
+	private String code;
 	
 	public String getCode() {
 		return code;

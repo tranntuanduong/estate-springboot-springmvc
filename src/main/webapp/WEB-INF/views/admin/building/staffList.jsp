@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@include file="/common/taglib.jsp"%>
+<c:url value="/api/building/handover" var = "abc" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,10 +19,11 @@
 
 <input type="hidden" value="${model.buildingId}" id="buildingId" name="buildingId"/>
 <input type="hidden" value="${model.customerId}" id="customerId" name="customerId"/>
+
 	<div class="modal-header">
         <h3 class="modal-title" id="exampleModalLabel">
-        	<c:if test="${action == 'assignment'}">Giao tòa nhà cho nhân viên</c:if>
-        	<c:if test="${action == 'staffInCharge'}">Chọn nhân viên quản lý</c:if>
+        	<c:if test="${model.action == 'assignment'}">Giao tòa nhà cho nhân viên</c:if>.
+        	<c:if test="${model.action == 'staffInCharge'}">Chọn nhân viên quản lý</c:if>
         </h3>
 	      	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	      	 	<span aria-hidden="true">&times;</span>
@@ -35,17 +37,17 @@
 							   <th>Tên nhân viên</th>	   			       
 							</tr>
 						</thead>		       				
+
 		        		<c:forEach var="item" items="${users.listResult}" >		        			
 							    <tbody>			    
 							      <tr> 
 							      	<td>	
 							      	
 										<c:if test="${model.action == 'assignment'}">
-											<input type="checkbox" value="${item.id}"  ${item.buildingChecked}>
+											${item.id}.<input type="checkbox" value="${item.id}"  ${item.buildingChecked}>
 										</c:if>		
 										<c:if test="${model.action == 'staffInCharge'}">
-											<!--  <input type="radio" value="${item.id}" name="customerId" ${item.customerChecked}>	-->	
-											<input type="checkbox" value="${item.id}"  ${item.customerChecked}>					
+											${item.id}.<input type="checkbox" value="${item.id}"  ${item.customerChecked}>					
 										</c:if>																																								
 									</td>
 							      	<td>${item.fullName}</td>		 
@@ -57,8 +59,9 @@
 			     </div>
 		     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-        <c:if test="${model.action == 'assignment'}"><button type="button" class="btn btn-primary" id=handOverBuilding>Lưu</button></c:if>
-        <c:if test="${model.action == 'staffInCharge'}"><button type="button" class="btn btn-primary" id=chooseStaffInCharge>Lưu</button></c:if>
+        ${ model.action}
+        <c:if test="${model.action == 'assignment'}"><button type="button" class="btn btn-primary" id="handOverBuilding">Lưu-1</button></c:if>
+        <c:if test="${model.action == 'staffInCharge'}"><button type="button" class="btn btn-primary" id=chooseStaffInCharge>Lưu-2</button></c:if>
 </div>
 <script type="text/javascript">
 $('#handOverBuilding').click(function name() {
@@ -73,7 +76,8 @@ $('#handOverBuilding').click(function name() {
 })
 function handOverBuilding(data, id) {
 	$.ajax({
-		url : 'http://localhost:8087/api/building/handover',
+		//url : 'http://localhost:8087/api/building/handover',
+		url : "${abc}",
 		data: JSON.stringify(data),
 		type: 'POST',	
 		contentType: 'application/json',
@@ -81,7 +85,7 @@ function handOverBuilding(data, id) {
 			window.location.href = "${buildingURL}?action=LIST&page=1&maxPageItem=3&sortName=name&sortBy=ASC&message=handOver_success";
 		},		
 		error: function() {
-			window.location.href = "${buildingURL}?action=LIST&page=1&maxPageItem=3&sortName=name&sortBy=ASC&message=errorsystem";
+			window.location.href = "${buildingURL}?action=LIST&page=1&maxPageItem=3&sortName=name&sortBy=ASC&message=hanOverErrorsystem";
 		}
 	});
 }

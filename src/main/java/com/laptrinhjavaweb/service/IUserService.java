@@ -11,6 +11,6 @@ import com.laptrinhjavaweb.dto.UserDTO;
 @Service
 public interface IUserService {
 	List<UserDTO> findAll(UserSearchBuilder builder, Pageable pageable);
-
+	
 }
  
