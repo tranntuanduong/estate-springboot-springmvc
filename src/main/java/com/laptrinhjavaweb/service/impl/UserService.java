@@ -2,13 +2,13 @@ package com.laptrinhjavaweb.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.laptrinhjavaweb.builder.UserSearchBuilder;
+import com.laptrinhjavaweb.constant.SystemConstant;
 import com.laptrinhjavaweb.converter.UserConverter;
 import com.laptrinhjavaweb.dto.BuildingDTO;
 import com.laptrinhjavaweb.dto.CustomerDTO;
@@ -51,5 +51,32 @@ public class UserService implements IUserService{
 		}
 		
 		return results;
+	}
+	@Override
+	public List<UserDTO> findAllStaffs(Long buildingId, Long customerId) {
+		List<UserEntity> userEntities = userRepository.findByStatusAndRolesCode(SystemConstant.ACTIVE_STATUS, SystemConstant.ROLE_STAFF);
+		List<UserDTO> result = new ArrayList<>();
+		for(UserEntity userEntity : userEntities) {
+//			userDTOs.add(userConverter.convertToDTO(userEntity));
+			UserDTO userDTO = userConverter.convertToDTO(userEntity);
+			//check for building
+			for(BuildingDTO building : userDTO.getBuildings()) {
+				if(buildingId != null) {
+					if(building.getId() == buildingId) {
+						userDTO.setBuildingChecked("checked");
+					}
+				}
+ 			}
+			//check for customer
+			for(CustomerDTO customer : userDTO.getCustomers()) {
+				if(customerId != null) {
+					if(customer.getId() == customerId) {
+						userDTO.setCustomerChecked("checked");
+					}
+				}
+			}
+			result.add(userDTO);
+		}
+		return result;
 	}
 }

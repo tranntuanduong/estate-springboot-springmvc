@@ -24,11 +24,8 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustome {
 	
 	@Override
 	public List<CustomerEntity> findAll(CustomerSearchBuilder builder, Pageable pageable) {
-		StringBuilder sql = new StringBuilder("SELECT C.company, C.email, C.name, C.need, C.node, C.phonenumber, C.status,");
-		sql.append(" C.id, C.createdby, C.createddate, C.modifiedby, C.modifieddate");
-		sql.append(" FROM customer C ");
-		sql.append(" LEFT JOIN customer_staff on C.id = customer_staff.customerid");
-		sql.append(" LEFT JOIN user ON user.id = customer_staff.userid where 1 = 1");
+		StringBuilder sql = new StringBuilder("SELECT * FROM customer C LEFT JOIN customer_staff CS ");
+		sql.append("ON C.id=CS.customerid WHERE 1=1 ");
 		//build map search 
 		Map<String, Object> properties = builderMapSearch(builder);
 		sql = createSQLFindAll(properties, sql);
@@ -48,19 +45,14 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustome {
 	public Long count(CustomerSearchBuilder builder) {
 		try {
 			StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM");
-			sql.append(" (SELECT C.id FROM customer AS C ");
-			sql.append(" LEFT JOIN customer_staff on C.id = customer_staff.customerid");
-			sql.append(" LEFT JOIN user ON user.id = customer_staff.userid WHERE 1 = 1");
-			//build map search 
+			sql.append(" (SELECT C.id FROM customer C LEFT JOIN customer_staff CS ");
+			sql.append("ON C.id=CS.customerid WHERE 1=1 ");
 			Map<String, Object> properties = builderMapSearch(builder);
 			sql = createSQLFindAll(properties, sql);
-			//build where clause
 			StringBuilder whereClause = buildWhereClause(builder);
 			sql.append(whereClause);
 			sql.append(" GROUP BY C.id) AS COUNT");
 			Query query = entityManager.createNativeQuery(sql.toString());
-			//not work
-			//entityManager.createNativeQuery(sql.toString(), CustomerEntity.class); 
 			List<BigInteger> resultList = query.getResultList();		
 			if(resultList.size() != 0) {
 				return Long.parseLong(resultList.get(0).toString(), 10);
@@ -76,7 +68,7 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustome {
 
 	private StringBuilder buildWhereClause(CustomerSearchBuilder builder) {
 		StringBuilder whereClause = new StringBuilder();
-		if(builder.getUserIds().length > 0) {
+		if(builder.getUserIds() != null) {
 			whereClause.append(" AND (userid="+builder.getUserIds()[0]+"");
 			for(String userid : builder.getUserIds()) {
 				if(!userid.equals(builder.getUserIds()[0])) {

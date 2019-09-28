@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@include file="/common/taglib.jsp"%>
+<c:url var = "buildingAPI" value = "/api/building"/>
 <c:url var = "buildingURL" value = "/admin/building"/>
-<c:url var="builddingAPI" value="/api-admin-building"/>
+<c:url var="builddingAPI" value="/api/admin/building"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -155,7 +156,7 @@
 														<label><b>Nhân viên quản lí: </b></label>
 														<select class="form-control" id="sel1" name="user_id">
 															<option value=""  selected>--Chọn nhân viên--</option>
-															<c:forEach var="item" items="${users.listResult}">
+															<c:forEach var="item" items="${staffs}">
 																<option value="${item.id}" ${(item.id==model.user_id)?'selected':''} >${item.fullName}</option>
 																
 															</c:forEach>
@@ -315,15 +316,15 @@
 	
 	function deleteBuilding(data) {
 		$.ajax({
-			url : 'http://localhost:8087/api/building',
+			url : '${buildingAPI}',
 			data: JSON.stringify(data),
 			type: 'DELETE',	
 			contentType: 'application/json',
 			success: function(data) {
-				window.location.href = "${buildingURL}?action=LIST&page=1&maxPageItem=3&sortName=name&sortBy=ASC&message=delete_success";
+				window.location.href = "${buildingURL}?page=1&maxPageItem=3&sortName=name&sortBy=ASC&message=deleteSuccess";
 			},		
 			error: function() {
-				window.location.href = "${buildingURL}?action=LIST&page=1&maxPageItem=3&sortName=name&sortBy=ASC&message=errorsystem";
+				window.location.href = "${buildingURL}?page=1&maxPageItem=3&sortName=name&sortBy=ASC&message=errorsystem";
 			}
 		});
 	}

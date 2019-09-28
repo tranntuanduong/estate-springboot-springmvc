@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 	<%@include file="/common/taglib.jsp"%>
-<c:url var="addOrUpdateBuildingURL" value="/api/building"/>
-<c:url var = "buildingURL" value = "/admin/building"/>
+<c:url var="saveBuildingURL" value="/api/building"/>
+<c:url var = "buildingURL" value = "/admin/building/edit"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -53,7 +53,7 @@
 								</div>
 								<div class="col-sm-3">
 									<div class="fg-line">
-										<c:forEach var="item" items="${users.listResult}" >		        			
+										<c:forEach var="item" items="${staffs}" >		        			
 											   	<tbody>			    
 											      <tr> 
 											      	<td>		
@@ -361,8 +361,7 @@
 	
 	function addBuilding(data,id) {
 		$.ajax({
-			//url: '${builddingAPI}',
-			url : 'api/building',
+			url: '${saveBuildingURL}',
 			data: JSON.stringify(data),
 			type: 'POST',	
 			contentType: 'application/json',
@@ -378,9 +377,7 @@
 	}
 	function editBuilding(data, id) {
 		$.ajax({
-			//url : 'http://localhost:8087/api/building',
-			url :  "${addOrUpdateBuildingURL}",
-			//url : '/api/building',
+			url :  "${saveBuildingURL}",
 			data: JSON.stringify(data),
 			type: 'PUT',	
 			contentType: 'application/json',	

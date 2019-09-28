@@ -40,10 +40,6 @@ public class CustomerService implements ICustomerService {
 		List<CustomerDTO> results = new ArrayList<>();
 		for(CustomerEntity customerEntity : customerEntities) {		
 			CustomerDTO customerDTO = customerConverter.convertToDTO(customerEntity);
-			//add user'fullName
-		/*	if(customerEntity.getUser() != null) {
-				customerDTO.setStaffInCharge(customerEntity.getUser().getFullName());
-			}*/
 			StringBuilder staffList = new StringBuilder();
 			if(customerEntity.getStaffs() != null) {
 				for(UserEntity user : customerEntity.getStaffs()) {

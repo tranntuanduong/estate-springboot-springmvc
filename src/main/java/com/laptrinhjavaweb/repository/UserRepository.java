@@ -9,5 +9,8 @@ import com.laptrinhjavaweb.repository.custom.UserRepositoryCustom;
 
 public interface UserRepository extends JpaRepository<UserEntity, Long>, UserRepositoryCustom{
 	List<UserEntity> findByBuildings_id(Long id);
+	//findByBuildingsId
 	UserEntity findOneByUserNameAndStatus(String name, int status);
+	List<UserEntity> findByStatusAndRolesCode(int status, String role);
+	UserEntity findById(Long id);
 }

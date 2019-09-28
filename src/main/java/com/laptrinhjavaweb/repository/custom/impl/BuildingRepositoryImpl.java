@@ -31,7 +31,6 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom{
 		try {
 			StringBuilder sql = new StringBuilder(" SELECT * FROM building AS A");
 			sql.append(" LEFT JOIN assignment on assignment.building_id=A.id");
-			sql.append(" LEFT JOIN user on assignment.user_id=user.id");
 			sql.append(" WHERE 1=1");
 			Map<String, Object> properties = buildMapSearch(builder);
 			sql = createSQLFindAll(properties, sql);
@@ -57,7 +56,6 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom{
 			StringBuilder sql = new StringBuilder(" SELECT COUNT(*) FROM");
 			sql.append(" (SELECT A.id FROM building AS A");
 			sql.append(" LEFT JOIN assignment on assignment.building_id=A.id");
-			sql.append(" LEFT JOIN user on assignment.user_id=user.id");
 			sql.append(" WHERE 1=1");
 			Map<String, Object> properties = buildMapSearch(builder);
 			sql = createSQLFindAll(properties, sql);

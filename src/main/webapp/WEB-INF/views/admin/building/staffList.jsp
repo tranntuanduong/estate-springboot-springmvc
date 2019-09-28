@@ -1,7 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@include file="/common/taglib.jsp"%>
-<c:url value="/api/building/handover" var = "abc" />
+<c:url value="/api/building/handover" var = "handOVerAPI" />
+<c:url value="/api/customer/staffInCharge" var = "staffInChargeAPI" />
+<c:url value = "/admin/building" var = "buildingURL" />
+<c:url value = "/admin/customer" var = "customerURL"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -76,8 +79,7 @@ $('#handOverBuilding').click(function name() {
 })
 function handOverBuilding(data, id) {
 	$.ajax({
-		//url : 'http://localhost:8087/api/building/handover',
-		url : "${abc}",
+		url : "${handOVerAPI}",
 		data: JSON.stringify(data),
 		type: 'POST',	
 		contentType: 'application/json',
@@ -103,7 +105,7 @@ $('#chooseStaffInCharge').click(function name() {
 
 function chooseStaffInCharge(data) {
 	$.ajax({
-		url : 'http://localhost:8087/api/customer/staffInCharge',
+		url : "${staffInChargeAPI}",
 		data: JSON.stringify(data),
 		type: 'POST',	
 		contentType: 'application/json',

@@ -3,7 +3,6 @@ package com.laptrinhjavaweb.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,7 +123,8 @@ public class BuildingService implements IBuildingService{
 		//add staffs
 		List<UserEntity> staffs = new ArrayList<UserEntity>();
 		for(Long id : model.getIds()) {
-			UserEntity staff = userRepository.findOne(model.getId());
+			//khong chay dc ham nay UserEntity staff = userRepository.findOne(model.getId());
+			UserEntity staff = userRepository.findById(id);
 			staffs.add(staff);
 		}
 		newBuilding.setStaffs(staffs);
