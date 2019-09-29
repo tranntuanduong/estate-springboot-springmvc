@@ -47,12 +47,7 @@ public class CustomerDTO extends AbstractDTO<CustomerDTO>  {
 	public void setTransactions(List<TransactionDTO> transactions) {
 		this.transactions = transactions;
 	}
-	public String getUserId() {
-		return userId;
-	}
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+
 	public String getNode() {
 		return node;
 	}
@@ -77,12 +72,6 @@ public class CustomerDTO extends AbstractDTO<CustomerDTO>  {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
 	public String getEmail() {
 		return email;
 	}
@@ -101,6 +90,18 @@ public class CustomerDTO extends AbstractDTO<CustomerDTO>  {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	
 	

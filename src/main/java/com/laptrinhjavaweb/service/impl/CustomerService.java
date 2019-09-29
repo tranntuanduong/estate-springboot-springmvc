@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.laptrinhjavaweb.builder.CustomerSearchBuilder;
 import com.laptrinhjavaweb.converter.CustomerConverter;
+import com.laptrinhjavaweb.dto.BuildingDTO;
 import com.laptrinhjavaweb.dto.CustomerDTO;
 import com.laptrinhjavaweb.dto.TransactionDTO;
 import com.laptrinhjavaweb.entity.CustomerEntity;
@@ -39,6 +41,7 @@ public class CustomerService implements ICustomerService {
 		List<CustomerEntity> customerEntities = customerRepository.findAll(builder, pageable);
 		List<CustomerDTO> results = new ArrayList<>();
 		for(CustomerEntity customerEntity : customerEntities) {		
+			/*code ngu
 			CustomerDTO customerDTO = customerConverter.convertToDTO(customerEntity);
 			StringBuilder staffList = new StringBuilder();
 			if(customerEntity.getStaffs() != null) {
@@ -51,6 +54,13 @@ public class CustomerService implements ICustomerService {
 				}
 			}
 			customerDTO.setStaffInCharge(staffList.toString());
+			results.add(customerDTO);
+			*/
+			CustomerDTO customerDTO = customerConverter.convertToDTO(customerEntity);
+			List<UserEntity> staffs = customerEntity.getStaffs();
+			List<String> fullNames = new ArrayList<>();
+			staffs.forEach(item -> fullNames.add(item.getFullName()));
+			customerDTO.setStaffInCharge(StringUtils.join(fullNames, ","));
 			results.add(customerDTO);
 		}
 		return results;

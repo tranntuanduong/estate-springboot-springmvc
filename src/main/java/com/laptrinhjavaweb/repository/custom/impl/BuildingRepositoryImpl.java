@@ -29,20 +29,21 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom{
 	@Override
 	public List<BuildingEntity> findAll(BuildingSearchBuilder builder, Pageable pageable) {
 		try {
-			StringBuilder sql = new StringBuilder(" SELECT * FROM building AS A");
-			sql.append(" LEFT JOIN assignment on assignment.building_id=A.id");
+			StringBuilder sql = new StringBuilder(" SELECT * FROM building AS A ");
+			if(StringUtils.isNotBlank(builder.getUser_id())) {
+				sql.append("INNER JOIN assignment AS ass ON ass.building_id=A.id");
+			}
 			sql.append(" WHERE 1=1");
 			Map<String, Object> properties = buildMapSearch(builder);
 			sql = createSQLFindAll(properties, sql);
 			StringBuilder whereClause = createWhereClause(builder);
 			sql.append(whereClause);
-			sql.append(" GROUP BY A.id");
 			Query query = entityManager.createNativeQuery(sql.toString(), BuildingEntity.class);
 			if(pageable != null) {
 				query.setFirstResult((int) pageable.getOffset());
 				query.setMaxResults(pageable.getPageSize());
 			}
-		return query.getResultList();
+			return query.getResultList();
 		} catch(Exception e) {
 			System.out.println(e);
 		}
@@ -53,15 +54,20 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom{
 	@Override
 	public Long count(BuildingSearchBuilder builder) {
 		try {
-			StringBuilder sql = new StringBuilder(" SELECT COUNT(*) FROM");
-			sql.append(" (SELECT A.id FROM building AS A");
-			sql.append(" LEFT JOIN assignment on assignment.building_id=A.id");
+			//code ngu
+//			StringBuilder sql = new StringBuilder(" SELECT COUNT(*) FROM");
+//			sql.append(" (SELECT A.id FROM building AS A");		
+//			sql.append(" LEFT JOIN assignment on assignment.building_id=A.id");
+//			sql.append(" WHERE 1=1");
+			StringBuilder sql = new StringBuilder(" SELECT COUNT(*) FROM building AS A ");
+			if(StringUtils.isNotBlank(builder.getUser_id())) {
+				sql.append("INNER JOIN assignment AS ass ON ass.building_id=A.id");
+			}
 			sql.append(" WHERE 1=1");
 			Map<String, Object> properties = buildMapSearch(builder);
 			sql = createSQLFindAll(properties, sql);
 			StringBuilder whereClause = createWhereClause(builder);
 			sql.append(whereClause);
-			sql.append(" GROUP BY A.id) AS COUNT");
 			Query query = entityManager.createNativeQuery(sql.toString());
 			List<BigInteger> resultList = query.getResultList();		
 			if(resultList.size() != 0) {
@@ -80,11 +86,10 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom{
 			Field[] fields = BuildingSearchBuilder.class.getDeclaredFields();
 			for (Field field : fields) {
 				if (!field.getName().equals("buildingTypes") && !field.getName().startsWith("costRent")
-						&& !field.getName().startsWith("areaRent")) {
+						&& !field.getName().startsWith("areaRent") && !field.getName().equals("user_id")) {
 					field.setAccessible(true);
 					if (StringUtils.isNotBlank((String) field.get(builder))) {					
-						if(field.getName().equals("numberOfBasement") || field.getName().equals("buildingArea")
-																	  || field.getName().equals("user_id")) {
+						if(field.getName().equals("numberOfBasement") || field.getName().equals("buildingArea")) {
 							result.put(field.getName().toLowerCase(), Integer.parseInt((String)field.get(builder)));
 						} else {
 							result.put(field.getName().toLowerCase(), field.get(builder));
@@ -123,10 +128,10 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom{
 					 whereClause.append(" OR A.type LIKE '%"+type+"%'");
 				 }
 			 }
-			 //java8
-//			 Arrays.stream(builder.getBuildingTypes()).filter(item -> !item.equals(builder.getBuildingTypes()[0]))
-//			 .forEach(item ->  whereClase.append(" OR A.type LIKE '%"+item+"%'"));
 			 whereClause.append(" )");
+		}
+		if(StringUtils.isNotBlank(builder.getUser_id())) {
+			whereClause.append(" AND ass.user_id = "+builder.getUser_id()+"");
 		}
 		return whereClause;
 	}
@@ -153,10 +158,7 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom{
 			}
 		}
 		return sql;
-	}
-
-
-	
+	}	
 }
 
 

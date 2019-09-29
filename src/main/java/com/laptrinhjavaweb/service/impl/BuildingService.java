@@ -36,11 +36,9 @@ public class BuildingService implements IBuildingService{
 	@Override
 	public List<BuildingDTO> findAll(BuildingSearchBuilder builder, Pageable pageable) {
 		List<BuildingEntity> buildingEntities = buildingRepository.findAll(builder, pageable);
-//		List<BuildingDTO> results = buildingEntities.stream()
-//													.map(item -> buildingConverter.convertToDTO(item)).collect(Collectors.toList());
 		List<BuildingDTO> results = new ArrayList<>();
-		
 		for(BuildingEntity buildingEntity : buildingEntities) {
+			/* code ngu
 			StringBuilder staffList = new StringBuilder();
 			BuildingDTO buildingDTO = buildingConverter.convertToDTO(buildingEntity);
 			if(buildingEntity.getStaffs() != null) {
@@ -53,6 +51,12 @@ public class BuildingService implements IBuildingService{
 				}
 				buildingDTO.setStaffInCharge(staffList.toString());
 			}
+			results.add(buildingDTO);*/
+			BuildingDTO buildingDTO = buildingConverter.convertToDTO(buildingEntity);
+			List<UserEntity> staffs = buildingEntity.getStaffs();
+			List<String> fullNames = new ArrayList<>();
+			staffs.forEach(item -> fullNames.add(item.getFullName()));
+			buildingDTO.setStaffInCharge(StringUtils.join(fullNames, ","));
 			results.add(buildingDTO);
 		}
 		return results;
@@ -65,51 +69,24 @@ public class BuildingService implements IBuildingService{
 	
 	@Override
 	@Transactional
-	public BuildingDTO save(BuildingDTO newBuilding) {
-
-		BuildingEntity buildingEntity = buildingConverter.convertToEntity(newBuilding);
-		buildingEntity.setCreatedBy("duong dep trai ahihi");
-		buildingEntity.setCreatedDate(new Date());	
-		if(newBuilding.getBuildingTypes().length > 0) {
-			buildingEntity.setType(StringUtils.join(newBuilding.getBuildingTypes(), ","));
+	public BuildingDTO save(BuildingDTO model) {
+		BuildingEntity newBuilding = buildingConverter.convertToEntity(model);
+		if(model.getId() != null) {
+			BuildingEntity oldBuilding = buildingRepository.findOne(model.getId());
+			newBuilding.setCreatedBy(oldBuilding.getCreatedBy());
+			newBuilding.setCreatedDate(oldBuilding.getCreatedDate());
+			newBuilding.setModifiedBy(oldBuilding.getModifiedBy());
+			newBuilding.setModifiedDate(oldBuilding.getModifiedDate());
+			rentAreaRepository.deleteByBuildingId(model.getId());
+		} else {	
+			newBuilding.setCreatedBy("duong dep trai ahihi");
+			newBuilding.setCreatedDate(new Date());	
+		}	
+		
+		if(model.getBuildingTypes().length > 0) {
+			newBuilding.setType(StringUtils.join(model.getBuildingTypes(), ","));
 		}
 		//save rentarea
-		List<RentAreaEntity> areas = new ArrayList<>();
-		if(StringUtils.isNotBlank(newBuilding.getRentArea())) {
-			for(String item : newBuilding.getRentArea().split(",")) {
-				RentAreaEntity rentArea = new RentAreaEntity();
-				rentArea.setValue(item);
-				rentArea.setBuilding(buildingEntity);
-				areas.add(rentArea);		
-			}	 
-		}
-		buildingEntity.setAreas(areas);
-		//save staffs
-		List<UserEntity> staffs = new ArrayList<UserEntity>();
-		for(Long id : newBuilding.getIds()) {
-			UserEntity staff = userRepository.findOne(id);
-			staffs.add(staff);
-		}
-		buildingEntity.setStaffs(staffs);
-		buildingEntity = buildingRepository.save(buildingEntity);
-		return buildingConverter.convertToDTO(buildingEntity);
-	}
-	@Override
-	@Transactional
-	public BuildingDTO update(BuildingDTO model) {
-		BuildingEntity oldBuilding = buildingRepository.findOne(model.getId());
-		BuildingEntity newBuilding = buildingConverter.convertToEntity(model);
-		if(model.getBuildingTypes().length > 0) {
-			newBuilding.setType(StringUtils.join(model.getBuildingTypes(),","));
-		}
-		newBuilding.setCreatedBy(oldBuilding.getCreatedBy());
-		newBuilding.setCreatedDate(oldBuilding.getCreatedDate());
-		newBuilding.setModifiedBy(oldBuilding.getModifiedBy());
-		newBuilding.setModifiedDate(oldBuilding.getModifiedDate());
-		newBuilding.setId(model.getId());
-		//delete buildingAreas
-		rentAreaRepository.deleteByBuildingId(model.getId());
-		//add new buildingAreas
 		List<RentAreaEntity> areas = new ArrayList<>();
 		if(StringUtils.isNotBlank(model.getRentArea())) {
 			for(String item : model.getRentArea().split(",")) {
@@ -120,17 +97,17 @@ public class BuildingService implements IBuildingService{
 			}	 
 		}
 		newBuilding.setAreas(areas);
-		//add staffs
+		//save staffs
 		List<UserEntity> staffs = new ArrayList<UserEntity>();
 		for(Long id : model.getIds()) {
-			//khong chay dc ham nay UserEntity staff = userRepository.findOne(model.getId());
-			UserEntity staff = userRepository.findById(id);
+			UserEntity staff = userRepository.findOne(id);
 			staffs.add(staff);
 		}
 		newBuilding.setStaffs(staffs);
 		newBuilding = buildingRepository.save(newBuilding);
 		return buildingConverter.convertToDTO(newBuilding);
 	}
+	
 	@Override
 	@Transactional
 	public void delete(Long[] ids) {

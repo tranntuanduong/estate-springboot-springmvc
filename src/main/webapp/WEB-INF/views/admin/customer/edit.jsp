@@ -160,8 +160,8 @@
 						<h1>${list1.value}
 							<button
 								class="dt-button buttons-colvis btn btn-white btn-primary btn-bold"
-								data-toggle="tooltip" title='Thêm hành động'
-								id="btn${list1.key}">
+								data-toggle="tooltip" title='Thêm hành động' 
+								id="${list1.key}">
 								<span><i class="fa fa-plus-circle sbigger-110 purple"></i></span>
 							</button>
 						</h1>
@@ -191,8 +191,8 @@
 										<th></th>
 										<th>
 											<form id="node">
-												<input type="text" style="width: 100%" name="node" /> <input
-													type="hidden" value="${list1.key}" name="code" />
+												<input type="text" style="width: 100%" name="node" id="id${list1.key}"/> 
+												<%-- <input type="hidden" value="${list1.key}" name="code" /> --%>
 											</form>
 										</th>
 									</tr>
@@ -205,88 +205,85 @@
 		</div>
 	</div>
 
-	<script type="text/javascript">
-		$('#bntAddOrUpdateCustomer').click(function name() {
-			var customerId = $('#customerId').val();
-			var formData = $('#formEdit').serializeArray();
-			var data = {};
-			$.each(formData, function(index, v) {
-				data["" + v.name + ""] = v.value;
-			});
-			data['customerId'] = customerId;
-			var dataArray = $('input[name="staffId"]:checked').map(function() {
-				return $(this).val();
-			}).get();
-			data['ids'] = dataArray;
-			if (customerId == '') {
-				addCustomer(data);
-			} else {
-				updateCustomer(data, customerId);
+<script type="text/javascript">
+	$('#bntAddOrUpdateCustomer').click(function name() {
+		var customerId = $('#customerId').val();
+		var formData = $('#formEdit').serializeArray();
+		var data = {};
+		$.each(formData, function(index, v) {
+			data["" + v.name + ""] = v.value;
+		});
+		data['customerId'] = customerId;
+		var dataArray = $('input[name="staffId"]:checked').map(function() {
+			return $(this).val();
+		}).get();
+		data['ids'] = dataArray;
+		if (customerId == '') {
+			addCustomer(data);
+		} else {
+			updateCustomer(data, customerId);
+		}
+	})
+	function updateCustomer(data, id) {
+		$.ajax({
+			url : "${customerAPI}",
+			data : JSON.stringify(data),
+			type : 'PUT',
+			contentType : 'application/json',
+			success : function(data) {
+				window.location.href = "${customerURL}?id="+id+ "&role=staff&message=addCustomerSuccess";
+			},
+			error : function() {
+				window.location.href = "${customerURL}?page=1&maxPageItem=3&sortName=name&sortBy=ASC&message=errorsystem";
 			}
-		})
-
-		function updateCustomer(data, id) {
-			$.ajax({
-				url : "${customerAPI}",
-				data : JSON.stringify(data),
-				type : 'PUT',
-				contentType : 'application/json',
-				success : function(data) {
-					window.location.href = "${customerURL}?id="+id+ "&role=staff&message=addCustomerSuccess";
-				},
-				error : function() {
-					window.location.href = "${customerURL}?page=1&maxPageItem=3&sortName=name&sortBy=ASC&message=errorsystem";
+		});
+	}
+	function addCustomer(data) {
+		$.ajax({
+			url : "${customerAPI}",
+			data : JSON.stringify(data),
+			type : 'POST',
+			contentType : 'application/json',
+			success : function(data) {
+				window.location.href = "${customerURL}?action=EDIT&id="+data.id+"&role=staff&message=success";
+			},
+			error : function() {
+				window.location.href = "${customerURL}?action=LIST&page=1&maxPageItem=3&sortName=name&sortBy=ASC&message=errorsystem";
 				}
 			});
 		}
-		function addCustomer(data) {
-			$.ajax({
-				url : "${customerAPI}",
-				data : JSON.stringify(data),
-				type : 'POST',
-				contentType : 'application/json',
-				success : function(data) {
-					window.location.href = "${customerURL}?action=EDIT&id="
-							+ data.id + "&role=staff&message=success";
-				},
-				error : function() {
-					window.location.href = "${customerURL}?action=LIST&page=1&maxPageItem=3&sortName=name&sortBy=ASC&message=errorsystem";
-				}
-			});
-		}
-
 		//insert node
 
-		$('#btnCUSTOMER_CARE').on('click', function(event) {
-			var customerId = $('#customerId').val();
-			var formData = $('#node').serializeArray();
-			var data = {};
-			$.each(formData, function(index, v) {
-				data["" + v.name + ""] = v.value;
-			});
-			data['customerId'] = customerId;
-			insertNode(data, customerId);
+		//$('#btnCUSTOMER_CARE').on('click', function(event) {
+			
+		//});
+	$("button").click(function() {
+		var idForm = 'id'+this.id;
+		var node = document.getElementById(idForm).value;
+		var code = this.id;
+		var customerId = $('#customerId').val();
+		var data = {};
+		data['node'] = node;
+		data['code'] = code;
+		data['customerId'] = customerId;
+		insertNode(data, customerId);
+	}); 
+
+	function insertNode(data, id) {
+		$.ajax({
+			url : "${transactionAPI}",
+			data : JSON.stringify(data),
+			type : 'POST',
+			contentType : 'application/json',
+			success : function(data) {
+				window.location.href = "${customerURL}?id="+id+ "&role=staff&message=success";
+			},
+			error : function() {
+				window.location.href = "${customerURL}?action=LIST&page=1&maxPageItem=3&sortName=name&sortBy=ASC&message=errorsystem";
+			}
 		});
-
-		function insertNode(data, id) {
-			$
-					.ajax({
-						url : "${transactionAPI}",
-						data : JSON.stringify(data),
-						type : 'POST',
-						contentType : 'application/json',
-						success : function(data) {
-							window.location.href = "${customerURL}?id=" + id
-									+ "&role=staff&message=success";
-						},
-						error : function() {
-							window.location.href = "${customerURL}?action=LIST&page=1&maxPageItem=3&sortName=name&sortBy=ASC&message=errorsystem";
-						}
-					});
-		}
-	</script>
-
-
+	}
+</script>
 </body>
 </html>
 

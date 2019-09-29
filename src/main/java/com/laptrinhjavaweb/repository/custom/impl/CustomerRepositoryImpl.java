@@ -21,71 +21,65 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustome {
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	@Override
 	public List<CustomerEntity> findAll(CustomerSearchBuilder builder, Pageable pageable) {
-		StringBuilder sql = new StringBuilder("SELECT * FROM customer C LEFT JOIN customer_staff CS ");
-		sql.append("ON C.id=CS.customerid WHERE 1=1 ");
-		//build map search 
-		Map<String, Object> properties = builderMapSearch(builder);
-		sql = createSQLFindAll(properties, sql);
-		//build where clause
-		StringBuilder whereClause = buildWhereClause(builder);
-		sql.append(whereClause.toString());
-		sql.append(" GROUP BY C.id");
-		Query query = entityManager.createNativeQuery(sql.toString(), CustomerEntity.class);
-		if(pageable != null) {
-			query.setFirstResult((int)pageable.getOffset());
-			query.setMaxResults(pageable.getPageSize());
+		try {
+			StringBuilder sql = new StringBuilder("SELECT * FROM customer as C ");
+			if(StringUtils.isNotBlank(builder.getUserId())) {
+				sql.append("INNER JOIN customer_staff AS CS ON CS.customerid = C.id ");
+			}
+			sql.append("WHERE 1=1 ");
+			Map<String, Object> properties = buildMapSearch(builder);
+			sql = createSQLFindAll(sql, properties);
+			StringBuilder whereClause = createWhereClause(builder);
+			sql.append(whereClause);
+			Query query = entityManager.createNativeQuery(sql.toString(), CustomerEntity.class);
+			if(pageable != null) {
+				query.setFirstResult((int) pageable.getOffset());
+				query.setMaxResults(pageable.getPageSize());
+			}
+			return query.getResultList();
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
-		return query.getResultList();
+		return null;
 	}
 	
 	@Override
 	public Long count(CustomerSearchBuilder builder) {
 		try {
-			StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM");
-			sql.append(" (SELECT C.id FROM customer C LEFT JOIN customer_staff CS ");
-			sql.append("ON C.id=CS.customerid WHERE 1=1 ");
-			Map<String, Object> properties = builderMapSearch(builder);
-			sql = createSQLFindAll(properties, sql);
-			StringBuilder whereClause = buildWhereClause(builder);
+			StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM customer as C ");
+			if(StringUtils.isNotBlank(builder.getUserId())) {
+				sql.append("INNER JOIN customer_staff AS CS ON CS.customerid = C.id ");
+			}
+			sql.append("WHERE 1=1 ");
+			Map<String, Object> properties = buildMapSearch(builder);
+			sql = createSQLFindAll(sql, properties);
+			StringBuilder whereClause = createWhereClause(builder);
 			sql.append(whereClause);
-			sql.append(" GROUP BY C.id) AS COUNT");
 			Query query = entityManager.createNativeQuery(sql.toString());
-			List<BigInteger> resultList = query.getResultList();		
+			List<BigInteger> resultList = query.getResultList();	
 			if(resultList.size() != 0) {
 				return Long.parseLong(resultList.get(0).toString(), 10);
 			} else {
 				return 0L;
 			}
 		} catch(Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		return null;
 	}
 	
-
-	private StringBuilder buildWhereClause(CustomerSearchBuilder builder) {
+	private StringBuilder createWhereClause(CustomerSearchBuilder builder) {
 		StringBuilder whereClause = new StringBuilder();
-		if(builder.getUserIds() != null) {
-			whereClause.append(" AND (userid="+builder.getUserIds()[0]+"");
-			for(String userid : builder.getUserIds()) {
-				if(!userid.equals(builder.getUserIds()[0])) {
-					whereClause.append(" OR userid="+userid+"");
-				}
-			}
-			whereClause.append(")");
-		}
 		if(StringUtils.isNotBlank(builder.getUserId())) {
-			whereClause.append(" AND userid="+builder.getUserId());
+			whereClause.append("AND CS.userid = "+builder.getUserId()+" ");
 		}
 		return whereClause;
 	}
 
-
-
-	private StringBuilder createSQLFindAll(Map<String, Object> properties, StringBuilder sql) {
+	private StringBuilder createSQLFindAll(StringBuilder sql, Map<String, Object> properties) {
 		if(properties != null && properties.size() >= 1) {
 			String[] params = new String[properties.size()];
 			Object[] values = new Object[properties.size()];
@@ -97,9 +91,9 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustome {
 			}
 			for(int j = 0; j < params.length; j++) {
 				if(values[j] instanceof String) {
-					sql.append(" AND LOWER("+params[j]+") LIKE LOWER('%"+values[j]+"%')");
+					sql.append(" AND LOWER("+params[j]+") LIKE LOWER('%"+values[j]+"%') ");
 				} else if(values[j] instanceof Long) {
-					sql.append(" AND"+params[j]+"="+values[j]+"");
+					sql.append(" AND "+params[j]+"="+values[j]+" ");
 				}
 				//etc
 			}
@@ -107,15 +101,19 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustome {
 		return sql;
 	}
 
-	private Map<String, Object> builderMapSearch(CustomerSearchBuilder builder) {
+	private Map<String, Object> buildMapSearch(CustomerSearchBuilder builder) {
 		Map<String, Object> results = new HashMap<>();
 		Field[] fields = CustomerSearchBuilder.class.getDeclaredFields();
 		try {
 			for(Field field : fields) {
 				field.setAccessible(true);
 				if(!field.getName().equals("userIds") && !field.getName().equals("userId")) {
-					if(StringUtils.isNotBlank((String) field.get(builder))) {
-						results.put(field.getName().toLowerCase(), field.get(builder));
+					if(StringUtils.isNotBlank((String)field.get(builder))) {			
+						if(field.getName().equals("phoneNumber")) {
+							results.put(field.getName().toLowerCase(), Long.parseLong((String)field.get(builder)));
+						} else {
+							results.put(field.getName().toLowerCase(), field.get(builder));
+						}
 					}
 				}
 			}
@@ -124,9 +122,4 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustome {
 		}
 		return results;
 	}
-
-
-
-
-	
 }

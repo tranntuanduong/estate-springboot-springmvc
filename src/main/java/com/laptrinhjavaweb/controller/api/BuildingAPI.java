@@ -27,8 +27,6 @@ public class BuildingAPI {
 	@Autowired
 	private IBuildingService buildingService;
 	
-	
-	
 	@PostMapping(value = {"/api/building"})
 	public BuildingDTO saveBuilding(@RequestBody BuildingDTO model) {
 		return buildingService.save(model);
@@ -41,7 +39,7 @@ public class BuildingAPI {
 	
 	@PutMapping(value = {"/api/building"})
 	public BuildingDTO updateBuilding(@RequestBody BuildingDTO model) {
-		return buildingService.update(model);
+		return buildingService.save(model);
 	} 
 	
 	@DeleteMapping(value = {"/api/building"})

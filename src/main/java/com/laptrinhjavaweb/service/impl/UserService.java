@@ -24,11 +24,40 @@ public class UserService implements IUserService{
 	private UserRepository userRepository;
 	@Autowired
 	private UserConverter userConverter;
+	
+	@Override
+	public List<UserDTO> findAllStaffs(Long buildingId, Long customerId) {
+		List<UserEntity> userEntities = userRepository.findByStatusAndRolesCode(SystemConstant.ACTIVE_STATUS, SystemConstant.ROLE_STAFF);
+		List<UserDTO> result = new ArrayList<>();
+		for(UserEntity userEntity : userEntities) {
+			UserDTO userDTO = userConverter.convertToDTO(userEntity);
+			//cho nay la anh code tu buoi truoc chu ko phai em nha
+			//check for building
+			for(BuildingDTO building : userDTO.getBuildings()) {
+				if(buildingId != null) {
+					if(building.getId() == buildingId) {
+						userDTO.setBuildingChecked("checked");
+					}
+				}
+ 			}
+			//check for customer
+			for(CustomerDTO customer : userDTO.getCustomers()) {
+				if(customerId != null) {
+					if(customer.getId() == customerId) {
+						userDTO.setCustomerChecked("checked");
+					}
+				}
+			}
+			result.add(userDTO);
+		}
+		return result;
+	}
+	//ham nay tam thoi choi dung den
+	//sau se co them phan quan li user
 	@Override
 	public List<UserDTO> findAll(UserSearchBuilder builder, Pageable pageable) {
 		List<UserEntity> userEntities = userRepository.findAll(builder, pageable);
-		List<UserDTO> results = new ArrayList<>();
-		
+		List<UserDTO> results = new ArrayList<>();	
 		for(UserEntity userEntity : userEntities) {
 			UserDTO userDTO = userConverter.convertToDTO(userEntity);
 			//check for building
@@ -51,32 +80,5 @@ public class UserService implements IUserService{
 		}
 		
 		return results;
-	}
-	@Override
-	public List<UserDTO> findAllStaffs(Long buildingId, Long customerId) {
-		List<UserEntity> userEntities = userRepository.findByStatusAndRolesCode(SystemConstant.ACTIVE_STATUS, SystemConstant.ROLE_STAFF);
-		List<UserDTO> result = new ArrayList<>();
-		for(UserEntity userEntity : userEntities) {
-//			userDTOs.add(userConverter.convertToDTO(userEntity));
-			UserDTO userDTO = userConverter.convertToDTO(userEntity);
-			//check for building
-			for(BuildingDTO building : userDTO.getBuildings()) {
-				if(buildingId != null) {
-					if(building.getId() == buildingId) {
-						userDTO.setBuildingChecked("checked");
-					}
-				}
- 			}
-			//check for customer
-			for(CustomerDTO customer : userDTO.getCustomers()) {
-				if(customerId != null) {
-					if(customer.getId() == customerId) {
-						userDTO.setCustomerChecked("checked");
-					}
-				}
-			}
-			result.add(userDTO);
-		}
-		return result;
 	}
 }
